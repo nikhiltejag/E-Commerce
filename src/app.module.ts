@@ -2,6 +2,11 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { Order } from './entities/order.entity';
+import { Product } from './entities/product.entity';
+import { User } from './entities/user.entity';
+import { SharedModule } from './shared/shared.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [TypeOrmModule.forRoot({
@@ -11,10 +16,10 @@ import { AppService } from './app.service';
     username: 'nikhil',
     password: 'password',
     database: 'test',
-    entities: [],
+    entities: [User, Order, Product],
     synchronize: true,
     logging: false
-  })],
+  }), SharedModule, AuthModule],
   controllers: [AppController],
   providers: [AppService],
 })
