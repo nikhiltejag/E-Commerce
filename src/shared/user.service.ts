@@ -22,7 +22,7 @@ export class UserService {
 
         const res = await this.userRepo.save(newUser)
 
-        return { id: res.id }
+        return res
     }
 
     async findByLogin(userDTO: LoginDTO) {
@@ -34,12 +34,17 @@ export class UserService {
             throw new HttpException('Invalid Credentials', HttpStatus.UNAUTHORIZED)
         }
 
-        return { msg: 'Login Successful' }
+        return user
     }
 
     async getAllUsers() {
         const users = await this.userRepo.find()
 
         return users
+    }
+
+    async findByPayLoad(payload: any) {
+        const { username } = payload
+        return await this.userRepo.findOne({ username })
     }
 }
