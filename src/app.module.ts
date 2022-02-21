@@ -7,6 +7,7 @@ import { Product } from './entities/product.entity';
 import { User } from './entities/user.entity';
 import { SharedModule } from './shared/shared.module';
 import { AuthModule } from './auth/auth.module';
+import { ProductModule } from './product/product.module';
 
 @Module({
   imports: [TypeOrmModule.forRoot({
@@ -19,7 +20,7 @@ import { AuthModule } from './auth/auth.module';
     entities: [User, Order, Product],
     synchronize: true,
     logging: false
-  }), SharedModule, AuthModule],
+  }), SharedModule, AuthModule, ProductModule],
   controllers: [AppController],
   providers: [AppService],
 })
