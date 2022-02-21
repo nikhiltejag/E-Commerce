@@ -1,16 +1,19 @@
 import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { UserService } from 'src/shared/user.service';
+import { UserService } from '../shared/user.service';
 import { LoginDTO, RegisterDTO } from './auth.dto';
 import { AuthService } from './auth.service';
+import { User } from '../utilities/user.decorator'
+import { SellerGuard } from 'src/guards/seller.guard';
 
 @Controller('auth')
 export class AuthController {
     constructor(private userService: UserService, private authService: AuthService) { }
 
     @Get()
-    @UseGuards(AuthGuard('jwt'))
-    tempAuth() {
+    @UseGuards(AuthGuard('jwt'), SellerGuard)
+    findAll(@User() user: any) {
+        console.log(user)
         return { auth: 'works' }
     }
 
@@ -43,7 +46,7 @@ export class AuthController {
 
     }
 
-    @Get()
+    @Get('all-users')
     async getAllUsers() {
         return await this.userService.getAllUsers()
     }
