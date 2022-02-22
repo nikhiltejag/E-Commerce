@@ -8,6 +8,9 @@ import { User } from './entities/user.entity';
 import { SharedModule } from './shared/shared.module';
 import { AuthModule } from './auth/auth.module';
 import { ProductModule } from './product/product.module';
+import { OrderController } from './order/order.controller';
+import { OrderService } from './order/order.service';
+import { OrderModule } from './order/order.module';
 
 @Module({
   imports: [TypeOrmModule.forRoot({
@@ -20,7 +23,7 @@ import { ProductModule } from './product/product.module';
     entities: [User, Order, Product],
     synchronize: true,
     logging: false
-  }), SharedModule, AuthModule, ProductModule],
+  }), SharedModule, AuthModule, ProductModule, OrderModule],
   controllers: [AppController],
   providers: [AppService],
 })

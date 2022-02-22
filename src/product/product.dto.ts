@@ -1,8 +1,9 @@
 export interface CreateProductDTO {
-    title: string,
-    image: string,
-    descritpion: string,
-    price: number
+  title: string;
+  description: string;
+  price: number;
+  created_at?: string;
+  id?: string;
 }
 
-export type UpdateProductDTO = Partial<CreateProductDTO>
+export type UpdateProductDTO = Partial<CreateProductDTO>;
