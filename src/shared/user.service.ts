@@ -6,45 +6,47 @@ import { Repository } from 'typeorm';
 
 @Injectable()
 export class UserService {
-    constructor(@InjectRepository(User) private userRepo: Repository<User>) { }
+  constructor(@InjectRepository(User) private userRepo: Repository<User>) {}
 
-    async create(userDTO: RegisterDTO) {
+  async create(userDTO: RegisterDTO) {
+    const { username, password, seller } = userDTO;
 
-        const { username, password } = userDTO
+    const user = await this.userRepo.findOne({ username });
 
-        const user = await this.userRepo.findOne({ username })
-
-        if (user) {
-            throw new HttpException('Username already exists', HttpStatus.BAD_REQUEST)
-        }
-
-        const newUser = this.userRepo.create({ username, password })
-
-        const res = await this.userRepo.save(newUser)
-
-        return res
+    if (user) {
+      throw new HttpException(
+        'Username already exists',
+        HttpStatus.BAD_REQUEST,
+      );
     }
 
-    async findByLogin(userDTO: LoginDTO) {
-        const { username, password } = userDTO
+    const newUser = this.userRepo.create({ username, password, seller });
 
-        const user = await this.userRepo.findOne({ username, password })
+    const res = await this.userRepo.save(newUser);
 
-        if (!user) {
-            throw new HttpException('Invalid Credentials', HttpStatus.UNAUTHORIZED)
-        }
+    return res;
+  }
 
-        return user
+  async findByLogin(userDTO: LoginDTO) {
+    const { username, password } = userDTO;
+
+    const user = await this.userRepo.findOne({ username, password });
+
+    if (!user) {
+      throw new HttpException('Invalid Credentials', HttpStatus.UNAUTHORIZED);
     }
 
-    async getAllUsers() {
-        const users = await this.userRepo.find()
+    return user;
+  }
 
-        return users
-    }
+  async getAllUsers() {
+    const users = await this.userRepo.find();
 
-    async findByPayLoad(payload: any) {
-        const { username } = payload
-        return await this.userRepo.findOne({ username })
-    }
+    return users;
+  }
+
+  async findByPayLoad(payload: any) {
+    const { username } = payload;
+    return await this.userRepo.findOne({ username });
+  }
 }
