@@ -8,23 +8,27 @@ import { User } from './entities/user.entity';
 import { SharedModule } from './shared/shared.module';
 import { AuthModule } from './auth/auth.module';
 import { ProductModule } from './product/product.module';
-import { OrderController } from './order/order.controller';
-import { OrderService } from './order/order.service';
 import { OrderModule } from './order/order.module';
 
 @Module({
-  imports: [TypeOrmModule.forRoot({
-    type: 'mysql',
-    host: 'localhost',
-    port: 3306,
-    username: 'nikhil',
-    password: 'password',
-    database: 'test',
-    entities: [User, Order, Product],
-    synchronize: true,
-    logging: false
-  }), SharedModule, AuthModule, ProductModule, OrderModule],
+  imports: [
+    TypeOrmModule.forRoot({
+      type: 'mysql',
+      host: 'localhost',
+      port: 3306,
+      username: 'nikhil',
+      password: 'password',
+      database: 'test',
+      entities: [User, Order, Product],
+      synchronize: true,
+      logging: false,
+    }),
+    SharedModule,
+    AuthModule,
+    ProductModule,
+    OrderModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}

@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { SharedModule } from '../shared/shared.module';
-// import { UserService } from 'src/shared/user.service';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { JwtStrategy } from './jwt.strategy';
@@ -9,6 +8,5 @@ import { JwtStrategy } from './jwt.strategy';
   imports: [SharedModule],
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy],
-  // providers: [UserService]
 })
-export class AuthModule { }
+export class AuthModule {}

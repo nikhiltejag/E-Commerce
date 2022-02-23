@@ -16,7 +16,6 @@ export class AuthController {
   @Get()
   @UseGuards(AuthGuard('jwt'), SellerGuard)
   findAll(@User() user: any) {
-    console.log('auth controller', user);
     return { auth: 'works' };
   }
 
