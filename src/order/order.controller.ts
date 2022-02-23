@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Post,
@@ -22,6 +23,12 @@ export class OrderController {
     return this.orderService.listOrdersByUser(user);
   }
 
+  @Get(':id')
+  @UseGuards(AuthGuard('jwt'))
+  listOrderById(@User() user: UserDTO, @Param('id') orderId: string) {
+    return this.orderService.findOrderById(user, orderId);
+  }
+
   @Put(':orderId/prod/:id')
   @UseGuards(AuthGuard('jwt'))
   addProd(
@@ -32,9 +39,19 @@ export class OrderController {
     return this.orderService.addProduct(user, orderId, prodId);
   }
 
-  @Post()
+  @Post('prod/:id')
   @UseGuards(AuthGuard('jwt'))
-  createOrder(@User() user: UserDTO, @Body() order) {
-    return this.orderService.createOrder(user);
+  createOrder(
+    @User() user: UserDTO,
+    @Param('id') prodId: string,
+    @Body() order,
+  ) {
+    return this.orderService.createOrder(user, prodId);
+  }
+
+  @Delete(':id')
+  @UseGuards(AuthGuard('jwt'))
+  deleteOrder(@User() user: UserDTO, @Param('id') orderId: string) {
+    return this.orderService.deleteOrder(user, orderId);
   }
 }

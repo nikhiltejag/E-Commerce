@@ -2,6 +2,7 @@ import {
   Column,
   Entity,
   JoinColumn,
+  JoinTable,
   ManyToMany,
   ManyToOne,
   PrimaryGeneratedColumn,
@@ -22,6 +23,7 @@ export class Order {
   })
   totalPrice: number;
 
-  @ManyToMany(() => Product)
+  @ManyToMany(() => Product, { eager: true })
+  @JoinTable()
   products: Product[];
 }
