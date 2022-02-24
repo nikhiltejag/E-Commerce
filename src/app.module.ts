@@ -9,6 +9,7 @@ import { SharedModule } from './shared/shared.module';
 import { AuthModule } from './auth/auth.module';
 import { ProductModule } from './product/product.module';
 import { OrderModule } from './order/order.module';
+import { Role } from './entities/role.entity';
 
 @Module({
   imports: [
@@ -19,7 +20,7 @@ import { OrderModule } from './order/order.module';
       username: 'nikhil',
       password: 'password',
       database: 'test',
-      entities: [User, Order, Product],
+      entities: [User, Order, Product, Role],
       synchronize: true,
       logging: false,
     }),

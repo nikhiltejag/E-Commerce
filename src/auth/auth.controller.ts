@@ -5,8 +5,11 @@ import { LoginDTO, RegisterDTO } from './auth.dto';
 import { AuthService } from './auth.service';
 import { User } from '../utilities/user.decorator';
 import { SellerGuard } from 'src/guards/seller.guard';
+import { Roles } from 'src/utilities/roles.decorator';
+import { RolesGuard } from 'src/guards/roles.guard';
 
 @Controller('auth')
+// @UseGuards(RoleGuard)
 export class AuthController {
   constructor(
     private userService: UserService,
@@ -14,7 +17,8 @@ export class AuthController {
   ) {}
 
   @Get()
-  @UseGuards(AuthGuard('jwt'), SellerGuard)
+  @Roles('admin')
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
   findAll(@User() user: any) {
     return { auth: 'works' };
   }
@@ -40,6 +44,7 @@ export class AuthController {
     const payload = {
       username: user.username,
       seller: user.seller,
+      admin: user.admin,
     };
 
     const jwtToken = await this.authService.signPayLoad(payload);
