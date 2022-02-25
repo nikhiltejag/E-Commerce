@@ -17,6 +17,6 @@ export class RolesGuard implements CanActivate {
       context.getClass(),
     ]);
 
-    return reqRoles.every((each) => userRoles.includes(each));
+    return reqRoles.some((each) => userRoles.includes(each));
   }
 }
