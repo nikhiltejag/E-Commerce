@@ -1,15 +1,23 @@
-import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Delete,
+  Param,
+  UseGuards,
+  Put,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { UserService } from '../shared/user.service';
 import { LoginDTO, RegisterDTO } from './auth.dto';
 import { AuthService } from './auth.service';
+import { User as UserDTO } from '../entities/user.entity';
 import { User } from '../utilities/user.decorator';
-import { SellerGuard } from 'src/guards/seller.guard';
 import { Roles } from 'src/utilities/roles.decorator';
 import { RolesGuard } from 'src/guards/roles.guard';
 
 @Controller('auth')
-// @UseGuards(RoleGuard)
 export class AuthController {
   constructor(
     private userService: UserService,
@@ -29,7 +37,6 @@ export class AuthController {
 
     const payload = {
       username: user.username,
-      seller: user.seller,
     };
 
     const jwtToken = await this.authService.signPayLoad(payload);
@@ -43,8 +50,6 @@ export class AuthController {
 
     const payload = {
       username: user.username,
-      seller: user.seller,
-      admin: user.admin,
     };
 
     const jwtToken = await this.authService.signPayLoad(payload);
@@ -55,5 +60,19 @@ export class AuthController {
   @Get('all-users')
   async getAllUsers() {
     return await this.userService.getAllUsers();
+  }
+
+  @Put('change-priv/:id')
+  @Roles('admin')
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  changePrivlagesOfUser(@Param('id') id: string, @Body() privilages) {
+    return this.userService.changePrivilages(id, privilages);
+  }
+
+  @Delete(':id')
+  @Roles('admin')
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  async deleteUser(@User() user: UserDTO, @Param('id') id: string) {
+    return this.userService.deleteUser(id);
   }
 }

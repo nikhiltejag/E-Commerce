@@ -53,7 +53,6 @@ export class UserService {
     const newUser = this.userRepo.create({
       username,
       password,
-      seller,
       roles: [userRole],
     });
 
@@ -91,5 +90,39 @@ export class UserService {
   async findByPayLoad(payload: any) {
     const { username } = payload;
     return await this.userRepo.findOne({ username });
+  }
+
+  async changePrivilages(id: string, privilages) {
+    const user = await this.userRepo.findOne({ id });
+
+    const { seller, admin } = privilages;
+
+    let newRoles = [];
+    if (admin || seller) {
+      const sellerRole = await this.roleRepo.findOne({ name: 'seller' });
+      newRoles.push(sellerRole);
+    }
+    if (admin) {
+      const adminRole = await this.roleRepo.findOne({ name: 'admin' });
+      newRoles.push(adminRole);
+    }
+
+    user.roles = newRoles;
+
+    await this.userRepo.save(user);
+
+    return { msg: `Privilages changes to user with id: ${id}` };
+  }
+
+  async deleteUser(id: string) {
+    const user = await this.userRepo.findOne({ id });
+
+    if (!user) {
+      throw new HttpException(
+        `User with id:${id} not found`,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    await this.userRepo.remove(user);
   }
 }

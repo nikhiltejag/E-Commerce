@@ -22,16 +22,6 @@ export class User {
   password: string;
 
   @Column({
-    default: false,
-  })
-  seller: boolean;
-
-  @Column({
-    default: false,
-  })
-  admin: true;
-
-  @Column({
     default: '',
   })
   address_street: string;

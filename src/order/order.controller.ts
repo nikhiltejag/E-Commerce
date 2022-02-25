@@ -10,27 +10,27 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { User as UserDTO } from 'src/entities/user.entity';
+import { RolesGuard } from 'src/guards/roles.guard';
+import { Roles } from 'src/utilities/roles.decorator';
 import { User } from 'src/utilities/user.decorator';
 import { OrderService } from './order.service';
-
+@UseGuards(AuthGuard('jwt'), RolesGuard)
+@Roles('user')
 @Controller('order')
 export class OrderController {
   constructor(private orderService: OrderService) {}
 
   @Get()
-  @UseGuards(AuthGuard('jwt'))
   listOrders(@User() user: UserDTO) {
     return this.orderService.listOrdersByUser(user);
   }
 
   @Get(':id')
-  @UseGuards(AuthGuard('jwt'))
   listOrderById(@User() user: UserDTO, @Param('id') orderId: string) {
     return this.orderService.findOrderById(user, orderId);
   }
 
   @Put(':orderId/prod/:id')
-  @UseGuards(AuthGuard('jwt'))
   addProd(
     @User() user: UserDTO,
     @Param('id') prodId: string,
@@ -40,7 +40,6 @@ export class OrderController {
   }
 
   @Post('prod/:id')
-  @UseGuards(AuthGuard('jwt'))
   createOrder(
     @User() user: UserDTO,
     @Param('id') prodId: string,
@@ -50,7 +49,6 @@ export class OrderController {
   }
 
   @Delete(':id')
-  @UseGuards(AuthGuard('jwt'))
   deleteOrder(@User() user: UserDTO, @Param('id') orderId: string) {
     return this.orderService.deleteOrder(user, orderId);
   }

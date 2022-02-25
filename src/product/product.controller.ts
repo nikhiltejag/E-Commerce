@@ -11,11 +11,13 @@ import {
 import { AuthGuard } from '@nestjs/passport';
 import { Product } from 'src/entities/product.entity';
 import { User as UserDTO } from 'src/entities/user.entity';
-import { SellerGuard } from 'src/guards/seller.guard';
+import { RolesGuard } from 'src/guards/roles.guard';
+import { Roles } from 'src/utilities/roles.decorator';
 import { User } from 'src/utilities/user.decorator';
 import { CreateProductDTO } from './product.dto';
 import { ProductService } from './product.service';
 
+@UseGuards(AuthGuard('jwt'), RolesGuard)
 @Controller('product')
 export class ProductController {
   constructor(private productService: ProductService) {}
@@ -26,13 +28,13 @@ export class ProductController {
   }
 
   @Get('mine')
-  @UseGuards(AuthGuard('jwt'), SellerGuard)
+  @Roles('seller')
   async listMyProd(@User() user: UserDTO) {
     return this.productService.findByOwner(user);
   }
 
   @Post()
-  @UseGuards(AuthGuard('jwt'), SellerGuard)
+  @Roles('seller')
   async create(@Body() product: CreateProductDTO, @User() user: UserDTO) {
     return this.productService.create(product, user);
   }
@@ -43,7 +45,7 @@ export class ProductController {
   }
 
   @Put(':id')
-  @UseGuards(AuthGuard('jwt'), SellerGuard)
+  @Roles('seller')
   update(
     @Body() product: Product,
     @Param('id') id: string,
@@ -53,7 +55,7 @@ export class ProductController {
   }
 
   @Delete(':id')
-  @UseGuards(AuthGuard('jwt'), SellerGuard)
+  @Roles('seller')
   async delete(@Param('id') id: string, @User() user: UserDTO) {
     return this.productService.delete(id, user);
   }
